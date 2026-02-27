@@ -200,16 +200,15 @@ vim.keymap.set('n', '<C-j>', '<C-w><C-j>', { desc = 'Move focus to the lower win
 vim.keymap.set('n', '<C-k>', '<C-w><C-k>', { desc = 'Move focus to the upper window' })
 
 vim.o.number = true
-vim.g.loaded_netrw       = 1
+vim.g.loaded_netrw = 1
 vim.g.loaded_netrwPlugin = 1
 
 local function open_nvim_tree()
-
   -- open the tree
-  require("nvim-tree.api").tree.open()
+  require('nvim-tree.api').tree.open()
 end
 
-filters = { custom = { "^.git$" } }
+filters = { custom = { '^.git$' } }
 
 -- NOTE: Some terminals have colliding keymaps or are not able to send distinct keycodes
 -- vim.keymap.set("n", "<C-S-h>", "<C-w>H", { desc = "Move window to the left" })
@@ -243,19 +242,22 @@ if not (vim.uv or vim.loop).fs_stat(lazypath) then
 end
 
 -- Put this at the top of 'init.lua'
-local path_package = vim.fn.stdpath('data') .. '/site'
+local path_package = vim.fn.stdpath 'data' .. '/site'
 local mini_path = path_package .. '/pack/deps/start/mini.nvim'
 if not vim.loop.fs_stat(mini_path) then
-  vim.cmd('echo "Installing `mini.nvim`" | redraw')
+  vim.cmd 'echo "Installing `mini.nvim`" | redraw'
   local clone_cmd = {
-    'git', 'clone', '--filter=blob:none',
+    'git',
+    'clone',
+    '--filter=blob:none',
     -- Uncomment next line to use 'stable' branch
     -- '--branch', 'stable',
-    'https://github.com/nvim-mini/mini.nvim', mini_path
+    'https://github.com/nvim-mini/mini.nvim',
+    mini_path,
   }
   vim.fn.system(clone_cmd)
-  vim.cmd('packadd mini.nvim | helptags ALL')
-  vim.cmd('echo "Installed `mini.nvim`" | redraw')
+  vim.cmd 'packadd mini.nvim | helptags ALL'
+  vim.cmd 'echo "Installed `mini.nvim`" | redraw'
 end
 
 ---@type vim.Option
@@ -408,18 +410,18 @@ require('lazy').setup({
 
       -- Useful for getting pretty icons, but requires a Nerd Font.
       { 'nvim-tree/nvim-web-devicons', enabled = vim.g.have_nerd_font },
-      
+
       { 'nvim-mini/mini.nvim', version = '*' },
       {
-        "kylechui/nvim-surround",
-        version = "^3.0.0", -- Use for stability; omit to use `main` branch for the latest features
-        event = "VeryLazy",
+        'kylechui/nvim-surround',
+        version = '^3.0.0', -- Use for stability; omit to use `main` branch for the latest features
+        event = 'VeryLazy',
         config = function()
-        require("nvim-surround").setup({
+          require('nvim-surround').setup {
             -- Configuration here, or leave empty to use defaults
-        })
-        end
-      }
+          }
+        end,
+      },
     },
     config = function()
       -- Telescope is a fuzzy finder that comes with a lot of different things that
@@ -979,18 +981,31 @@ require('lazy').setup({
     end,
   },
   {
-    "nvim-treesitter/nvim-treesitter",
+    'nvim-treesitter/nvim-treesitter',
     lazy = false,
-    build = ":TSUpdate",
+    build = ':TSUpdate',
     config = function()
-      require("nvim-treesitter").setup()
+      require('nvim-treesitter').setup()
 
       -- Find the name of parsers with:
       --  := require("nvim-treesitter").get_available()
       -- (LaTeX clashes with Vimtex)
-      local languages = { "bash",
-        "c", "cpp", "fish", "html", "java", "javascript", "lua", "markdown", "markdown_inline",
-        "python", "sql", "vimscript", "vimdoc" }
+      local languages = {
+        'bash',
+        'c',
+        'cpp',
+        'fish',
+        'html',
+        'java',
+        'javascript',
+        'lua',
+        'markdown',
+        'markdown_inline',
+        'python',
+        'sql',
+        'vimscript',
+        'vimdoc',
+      }
 
       local filetypes = {}
       for _, lang in ipairs(languages) do
@@ -999,29 +1014,29 @@ require('lazy').setup({
         end
       end
 
-      vim.api.nvim_create_autocmd("FileType", {
+      vim.api.nvim_create_autocmd('FileType', {
         pattern = filetypes,
         callback = function()
           vim.treesitter.start()
-          vim.wo[0][0].foldexpr = "v:lua.vim.treesitter.foldexpr()"
-          vim.wo[0][0].foldmethod = "expr"
+          vim.wo[0][0].foldexpr = 'v:lua.vim.treesitter.foldexpr()'
+          vim.wo[0][0].foldmethod = 'expr'
           -- Indentation is Experimental
           -- vim.bo.indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
         end,
       })
-    end
+    end,
   },
 
   {
-    "chrisgrieser/nvim-various-textobjs",
-    event = "VeryLazy",
-    opts = { 
+    'chrisgrieser/nvim-various-textobjs',
+    event = 'VeryLazy',
+    opts = {
       keymaps = {
-			  useDefaults = true 
-		  }
-	  },
+        useDefaults = true,
+      },
+    },
   },
-  {'kevinhwang91/nvim-bqf'},
+  { 'kevinhwang91/nvim-bqf' },
 
   -- The following comments only work if you have downloaded the kickstart repo, not just copy pasted the
   -- init.lua. If you want these files, they are in the repository, so you can just download them and
@@ -1051,7 +1066,6 @@ require('lazy').setup({
   -- you can continue same window with `<space>sr` which resumes last telescope search
 
   -- optional
-  
 }, {
   ui = {
     -- If you are using a Nerd Font: set icons to an empty table which will use the
@@ -1087,4 +1101,19 @@ require('lazy').setup({
 --     },
 -- })
 
-vim.cmd.colorscheme "catppuccin-frappe"
+vim.cmd.colorscheme 'catppuccin-frappe'
+
+vim.keymap.set('n', '<C-o>', function()
+  vim.cmd 'vsplit | wincmd r | vertical resize 30'
+  require('oil').open()
+end)
+
+vim.lsp.config('ruff', {
+  init_options = {
+    settings = {
+      -- Ruff language server settings go here
+    }
+  }
+})
+
+vim.lsp.enable('ruff')

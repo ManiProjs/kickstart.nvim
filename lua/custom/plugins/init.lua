@@ -4,29 +4,28 @@
 -- See the kickstart.nvim README for more information
 return {
   {
-    "ibhagwan/fzf-lua",
+    'ibhagwan/fzf-lua',
     -- optional for icon support
-    dependencies = { "nvim-tree/nvim-web-devicons" },
+    dependencies = { 'nvim-tree/nvim-web-devicons' },
     -- or if using mini.icons/mini.nvim
     -- dependencies = { "nvim-mini/mini.icons" },
     ---@module "fzf-lua"
     ---@type fzf-lua.Config|{}
     ---@diagnostics disable: missing-fields
-    opts = {}
+    opts = {},
     ---@diagnostics enable: missing-fields
   },
   {
     'numToStr/Comment.nvim',
-    opts = {
-      -- add any options here
-    }
+    event = 'VeryLazy',
+    opts = {},
   },
   {
     'nvim-lualine/lualine.nvim',
-    dependencies = { 'nvim-tree/nvim-web-devicons' }
+    dependencies = { 'nvim-tree/nvim-web-devicons' },
   },
   {
-    "karb94/neoscroll.nvim",
+    'karb94/neoscroll.nvim',
     opts = {},
   },
   {
@@ -44,34 +43,34 @@ return {
       -- ignore. Feel free to remove this line after you've gotten Modicator to
       -- work properly.
       show_warnings = false,
-    }
+    },
   },
   {
-    "folke/noice.nvim",
-    event = "VeryLazy",
+    'folke/noice.nvim',
+    event = 'VeryLazy',
     opts = {
       -- add any options here
     },
     dependencies = {
       -- if you lazy-load any plugin below, make sure to add proper `module="..."` entries
-      "MunifTanjim/nui.nvim",
+      'MunifTanjim/nui.nvim',
       -- OPTIONAL:
       --   `nvim-notify` is only needed, if you want to use the notification view.
       --   If not available, we use `mini` as the fallback
-      "rcarriga/nvim-notify",
-      }
+      'rcarriga/nvim-notify',
+    },
   },
   {
-    "ahmedkhalf/project.nvim",
-    event = "VeryLazy",
+    'ahmedkhalf/project.nvim',
+    event = 'VeryLazy',
     opts = {
       manual_mode = true,
     },
     config = function(_, opts)
-      require("project_nvim").setup(opts)
+      require('project_nvim').setup(opts)
 
       -- Override delete_project behavior
-      local history = require("project_nvim.utils.history")
+      local history = require 'project_nvim.utils.history'
       history.delete_project = function(project)
         for k, v in pairs(history.recent_projects) do
           if v == project.value then
@@ -82,14 +81,14 @@ return {
       end
 
       -- Load Telescope extension safely
-      local ok, telescope = pcall(require, "telescope")
+      local ok, telescope = pcall(require, 'telescope')
       if ok then
-        telescope.load_extension("projects")
+        telescope.load_extension 'projects'
       end
     end,
   },
-  {'nvim-lua/plenary.nvim'},
-  {'tpope/vim-fugitive'},
+  { 'nvim-lua/plenary.nvim' },
+  { 'tpope/vim-fugitive' },
   {
     'nvimdev/dashboard-nvim',
     event = 'VimEnter',
@@ -98,29 +97,63 @@ return {
         -- config
       }
     end,
-    dependencies = { {'nvim-tree/nvim-web-devicons'}}
+    dependencies = { { 'nvim-tree/nvim-web-devicons' } },
   },
-  {'justinmk/vim-sneak'},
+  { 'justinmk/vim-sneak' },
   {
     'windwp/nvim-autopairs',
-    event = "InsertEnter",
-    config = true
+    event = 'InsertEnter',
+    config = true,
     -- use opts = {} for passing setup options
     -- this is equivalent to setup({}) function
   },
   {
-    "nvim-tree/nvim-tree.lua",
-    version = "*",
+    'nvim-tree/nvim-tree.lua',
+    version = '*',
     lazy = false,
     dependencies = {
-      "nvim-tree/nvim-web-devicons",
+      'nvim-tree/nvim-web-devicons',
     },
     config = function()
-      require("nvim-tree").setup {
-      }
+      require('nvim-tree').setup {}
     end,
   },
-  { "catppuccin/nvim", name = "catppuccin", priority = 1000 },
+  { 'catppuccin/nvim', name = 'catppuccin', priority = 1000 },
+  {
+    'stevearc/oil.nvim',
+    ---@module 'oil'
+    ---@type oil.SetupOpts
+    opts = {
+      default_file_explorer = false,
+    },
+    -- Optional dependencies
+    dependencies = { { 'nvim-mini/mini.icons', opts = {} } },
+    -- dependencies = { "nvim-tree/nvim-web-devicons" }, -- use if you prefer nvim-web-devicons
+    -- Lazy loading is not recommended because it is very tricky to make it work correctly in all situations.
+    lazy = false,
+  },
+  {
+    'tpope/vim-sleuth',
+    event = { 'BufReadPost', 'BufNewFile' }, -- Load after your file content
+  },
+  {
+    'https://github.com/farmergreg/vim-lastplace',
+    event = 'BufReadPost',
+  },
+  {
+    'https://github.com/lukas-reineke/indent-blankline.nvim',
+    event = { 'VeryLazy' },
+    config = function()
+      require('ibl').setup()
+    end,
+  },
+  {
+    'https://github.com/nvim-lualine/lualine.nvim',
+    event = 'VeryLazy',
+    config = function()
+      require('lualine').setup()
+    end,
+  },
 }
 
 -- nvim-tree.view.float = true
