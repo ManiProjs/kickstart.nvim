@@ -203,11 +203,6 @@ vim.o.number = true
 vim.g.loaded_netrw = 1
 vim.g.loaded_netrwPlugin = 1
 
-local function open_nvim_tree()
-  -- open the tree
-  require('nvim-tree.api').tree.open()
-end
-
 filters = { custom = { '^.git$' } }
 
 -- NOTE: Some terminals have colliding keymaps or are not able to send distinct keycodes
@@ -407,9 +402,6 @@ require('lazy').setup({
         end,
       },
       { 'nvim-telescope/telescope-ui-select.nvim' },
-
-      -- Useful for getting pretty icons, but requires a Nerd Font.
-      { 'nvim-tree/nvim-web-devicons', enabled = vim.g.have_nerd_font },
 
       { 'nvim-mini/mini.nvim', version = '*' },
       {
@@ -1103,10 +1095,6 @@ require('lazy').setup({
 
 vim.cmd.colorscheme 'catppuccin-frappe'
 
-vim.keymap.set('n', '<C-o>', function()
-  vim.cmd 'vsplit | wincmd r | vertical resize 30'
-  require('oil').open()
-end)
 
 vim.lsp.config('ruff', {
   init_options = {
@@ -1117,3 +1105,4 @@ vim.lsp.config('ruff', {
 })
 
 vim.lsp.enable('ruff')
+
