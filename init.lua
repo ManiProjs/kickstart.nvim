@@ -1164,4 +1164,4 @@ require('neo-tree').setup {
 
 vim.keymap.set('n', '<leader>e', ':Neotree toggle<cr>')
 
-require('lspconfig').html.setup {}
+vim.lsp.enable {}
