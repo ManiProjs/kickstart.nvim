@@ -323,7 +323,7 @@ require('lazy').setup({
   -- Then, because we use the `opts` key (recommended), the configuration runs
   -- after the plugin has been loaded as `require(MODULE).setup(opts)`.
 
-  { -- Useful plugin to show you pending keybinds.
+  {                     -- Useful plugin to show you pending keybinds.
     'folke/which-key.nvim',
     event = 'VimEnter', -- Sets the loading event to 'VimEnter'
     opts = {
@@ -403,7 +403,7 @@ require('lazy').setup({
       },
       { 'nvim-telescope/telescope-ui-select.nvim' },
 
-      { 'nvim-mini/mini.nvim', version = '*' },
+      { 'nvim-mini/mini.nvim',                    version = '*' },
       {
         'kylechui/nvim-surround',
         version = '^3.0.0', -- Use for stability; omit to use `main` branch for the latest features
@@ -521,7 +521,7 @@ require('lazy').setup({
       'WhoIsSethDaniel/mason-tool-installer.nvim',
 
       -- Useful status updates for LSP.
-      { 'j-hui/fidget.nvim', opts = {} },
+      { 'j-hui/fidget.nvim',    opts = {} },
 
       -- Allows extra capabilities provided by blink.cmp
       'saghen/blink.cmp',
@@ -1125,4 +1125,43 @@ cmp.setup {
       select = true,
     },
   },
+
+  sources = {
+    { name = 'nvim_lsp' },
+  },
 }
+
+vim.api.nvim_create_autocmd('BufWritePre', {
+  callback = function()
+    vim.lsp.buf.format { async = false }
+  end,
+})
+
+vim.keymap.set('n', '<leader>f', function()
+  vim.lsp.buf.format { async = true }
+end)
+
+vim.keymap.set('n', '<leader>d', vim.diagnostic.open_float)
+vim.keymap.set('n', '[d', vim.diagnostic.goto_prev)
+vim.keymap.set('n', ']d', vim.diagnostic.goto_next)
+
+vim.keymap.set('n', '<leader>gb', ':Gitsigns blame_line<cr>')
+vim.keymap.set('n', '<leader>gp', ':Gitsigns preview_hunk<cr>')
+vim.keymap.set('n', '<leader>gr', ':Gitsigns reset_hunk<cr>')
+
+require('neo-tree').setup {
+  filesystem = {
+    follow_current_file = {
+      enabled = true,
+    },
+  },
+  window = {
+    position = 'left',
+    width = 30,
+  },
+  close_if_last_winow = true,
+}
+
+vim.keymap.set('n', '<leader>e', ':Neotree toggle<cr>')
+
+require('lspconfig').html.setup {}

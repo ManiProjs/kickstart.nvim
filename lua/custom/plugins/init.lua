@@ -51,7 +51,7 @@ return {
     opts = {
       -- add any options here
     },
-    dependencies = { -- if you lazy-load any plugin below, make sure to add proper `module="..."` entries
+    dependencies = {          -- if you lazy-load any plugin below, make sure to add proper `module="..."` entries
       'MunifTanjim/nui.nvim', -- OPTIONAL:
       --   `nvim-notify` is only needed, if you want to use the notification view.
       --   If not available, we use `mini` as the fallback
@@ -113,7 +113,7 @@ return {
       'MunifTanjim/nui.nvim',
       'nvim-tree/nvim-web-devicons', -- optional, but recommended
     },
-    lazy = false, -- neo-tree will lazily load itself
+    lazy = false,                    -- neo-tree will lazily load itself
   },
   {},
   {
@@ -170,6 +170,42 @@ return {
     'lewis6991/gitsigns.nvim',
     config = function()
       require('gitsigns').setup()
+    end,
+  },
+  {
+    'stevearc/conform.nvim',
+    config = function()
+      require('conform').setup {
+        formatters_by_ft = {
+          lua = { 'stylua' },
+          javascript = { 'prettier' },
+          typescript = { 'prettier' },
+          python = { 'black' },
+        },
+
+        format_on_save = {
+          timeout_ms = 500,
+          lsp_fallback = true,
+        },
+      }
+    end,
+  },
+  {
+    'stevearc/conform.nvim',
+    config = function()
+      require('conform').setup {
+        formatters_by_ft = {
+          lua = { 'stylua' },
+          javascript = { 'prettier' },
+          typescript = { 'prettier' },
+          python = { 'black' },
+        },
+
+        format_on_save = {
+          timeout_ms = 500,
+          lsp_fallback = true,
+        },
+      }
     end,
   },
 }
