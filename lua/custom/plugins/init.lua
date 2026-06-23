@@ -99,6 +99,34 @@ return {
   },
   { 'justinmk/vim-sneak' },
   {
+    'windwp/nvim-ts-autotag',
+    config = function()
+      require('nvim-ts-autotag').setup()
+    end,
+  },
+  {
+    'mfussenegger/nvim-lint',
+    config = function()
+      local lint = require 'lint'
+
+      lint.linters_by_ft = {
+        python = { 'flake8' },
+        javascript = { 'eslint_d' },
+        typescript = { 'eslint_d' },
+      }
+
+      vim.api.nvim_create_autocmd({ 'BufWritePost' }, {
+        callback = function()
+          lint.try_lint()
+        end,
+      })
+    end,
+  },
+  {
+    'mattn/emmet-vim',
+    ft = { 'html', 'css', 'javascriptreact', 'typescriptreact' },
+  },
+  {
     'windwp/nvim-autopairs',
     event = 'InsertEnter',
     config = true,
@@ -159,13 +187,13 @@ return {
       require('lualine').setup()
     end,
   },
-  {
-    'hrsh7th/nvim-cmp',
-    dependencies = {
-      'hrsh7th/cmp-nvim-lsp',
-      'L3MON4D3/LuaSnip',
-    },
-  },
+  -- {
+  --   'hrsh7th/nvim-cmp',
+  --   dependencies = {
+  --     'hrsh7th/cmp-nvim-lsp',
+  --     'L3MON4D3/LuaSnip',
+  --   },
+  -- },
   {
     'lewis6991/gitsigns.nvim',
     config = function()
@@ -174,6 +202,7 @@ return {
   },
   {
     'stevearc/conform.nvim',
+    event = { 'BufReadPre', 'BufNewFile', 'BufWritePre' },
     config = function()
       require('conform').setup {
         formatters_by_ft = {
