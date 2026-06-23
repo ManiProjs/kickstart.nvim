@@ -1095,6 +1095,9 @@ require('lazy').setup({
 
 vim.cmd.colorscheme 'catppuccin-frappe'
 
+require('Comment').setup()
+
+-- LSP configs
 vim.lsp.config('ruff', {
   init_options = {
     settings = {
