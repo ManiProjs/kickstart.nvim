@@ -2,241 +2,269 @@
 --  I promise not to create any merge conflicts in this directory :)
 --
 -- See the kickstart.nvim README for more information
-return {
-  {
+return {{
     'ibhagwan/fzf-lua',
     -- optional for icon support
-    dependencies = { 'nvim-tree/nvim-web-devicons' },
+    dependencies = {'nvim-tree/nvim-web-devicons'},
     -- or if using mini.icons/mini.nvim
     -- dependencies = { "nvim-mini/mini.icons" },
     ---@module "fzf-lua"
     ---@type fzf-lua.Config|{}
     ---@diagnostics disable: missing-fields
-    opts = {},
+    opts = {}
     ---@diagnostics enable: missing-fields
-  },
-  {
+}, {
     'numToStr/Comment.nvim',
     event = 'VeryLazy',
-    opts = {},
-  },
-  {
+    opts = {}
+}, {
     'nvim-lualine/lualine.nvim',
-    dependencies = { 'nvim-tree/nvim-web-devicons' },
-  },
-  {
+    dependencies = {'nvim-tree/nvim-web-devicons'}
+}, {
     'karb94/neoscroll.nvim',
-    opts = {},
-  },
-  {
+    opts = {}
+}, {
     'mawkler/modicator.nvim',
     dependencies = 'mawkler/onedark.nvim', -- Add your colorscheme plugin here
     init = function()
-      -- These are required for Modicator to work
-      vim.o.cursorline = true
-      vim.o.number = true
-      vim.o.termguicolors = true
+        -- These are required for Modicator to work
+        vim.o.cursorline = true
+        vim.o.number = true
+        vim.o.termguicolors = true
     end,
     opts = {
-      -- Warn if any required option above is missing. May emit false positives
-      -- if some other plugin modifies them, which in that case you can just
-      -- ignore. Feel free to remove this line after you've gotten Modicator to
-      -- work properly.
-      show_warnings = false,
-    },
-  },
-  {
+        -- Warn if any required option above is missing. May emit false positives
+        -- if some other plugin modifies them, which in that case you can just
+        -- ignore. Feel free to remove this line after you've gotten Modicator to
+        -- work properly.
+        show_warnings = false
+    }
+}, {
     'folke/noice.nvim',
     event = 'VeryLazy',
     opts = {
-      -- add any options here
+        -- add any options here
     },
-    dependencies = {          -- if you lazy-load any plugin below, make sure to add proper `module="..."` entries
-      'MunifTanjim/nui.nvim', -- OPTIONAL:
-      --   `nvim-notify` is only needed, if you want to use the notification view.
-      --   If not available, we use `mini` as the fallback
-      'rcarriga/nvim-notify',
-    },
-  },
-  {
+    dependencies = { -- if you lazy-load any plugin below, make sure to add proper `module="..."` entries
+    'MunifTanjim/nui.nvim', -- OPTIONAL:
+    --   `nvim-notify` is only needed, if you want to use the notification view.
+    --   If not available, we use `mini` as the fallback
+    'rcarriga/nvim-notify'}
+}, {
     'ahmedkhalf/project.nvim',
     event = 'VeryLazy',
     opts = {
-      manual_mode = true,
+        manual_mode = true
     },
     config = function(_, opts)
-      require('project_nvim').setup(opts)
+        require('project_nvim').setup(opts)
 
-      -- Override delete_project behavior
-      local history = require 'project_nvim.utils.history'
-      history.delete_project = function(project)
-        for k, v in pairs(history.recent_projects) do
-          if v == project.value then
-            history.recent_projects[k] = nil
-            return
-          end
+        -- Override delete_project behavior
+        local history = require 'project_nvim.utils.history'
+        history.delete_project = function(project)
+            for k, v in pairs(history.recent_projects) do
+                if v == project.value then
+                    history.recent_projects[k] = nil
+                    return
+                end
+            end
         end
-      end
 
-      -- Load Telescope extension safely
-      local ok, telescope = pcall(require, 'telescope')
-      if ok then
-        telescope.load_extension 'projects'
-      end
-    end,
-  },
-  { 'nvim-lua/plenary.nvim' },
-  { 'tpope/vim-fugitive' },
-  {
+        -- Load Telescope extension safely
+        local ok, telescope = pcall(require, 'telescope')
+        if ok then
+            telescope.load_extension 'projects'
+        end
+    end
+}, {'nvim-lua/plenary.nvim'}, {'tpope/vim-fugitive'}, {
     'nvimdev/dashboard-nvim',
     event = 'VimEnter',
     config = function()
-      require('dashboard').setup {
-        -- config
-      }
+        require('dashboard').setup {
+            -- config
+        }
     end,
-    dependencies = { { 'nvim-tree/nvim-web-devicons' } },
-  },
-  { 'justinmk/vim-sneak' },
-  {
+    dependencies = {{'nvim-tree/nvim-web-devicons'}}
+}, {'justinmk/vim-sneak'}, {
     'windwp/nvim-ts-autotag',
     config = function()
-      require('nvim-ts-autotag').setup()
-    end,
-  },
-  {
+        require('nvim-ts-autotag').setup()
+    end
+}, {
     'mfussenegger/nvim-lint',
     config = function()
-      local lint = require 'lint'
+        local lint = require 'lint'
 
-      lint.linters_by_ft = {
-        python = { 'flake8' },
-        javascript = { 'eslint_d' },
-        typescript = { 'eslint_d' },
-      }
+        lint.linters_by_ft = {
+            python = {'flake8'},
+            javascript = {'eslint_d'},
+            typescript = {'eslint_d'}
+        }
 
-      vim.api.nvim_create_autocmd({ 'BufWritePost' }, {
-        callback = function()
-          lint.try_lint()
-        end,
-      })
-    end,
-  },
-  {
+        vim.api.nvim_create_autocmd({'BufWritePost'}, {
+            callback = function()
+                lint.try_lint()
+            end
+        })
+    end
+}, {
     'mattn/emmet-vim',
-    ft = { 'html', 'css', 'javascriptreact', 'typescriptreact' },
-  },
-  {
+    ft = {'html', 'css', 'javascriptreact', 'typescriptreact'}
+}, {
     'windwp/nvim-autopairs',
     event = 'InsertEnter',
-    config = true,
+    config = true
     -- use opts = {} for passing setup options
     -- this is equivalent to setup({}) function
-  },
-  {
+}, {
     'nvim-neo-tree/neo-tree.nvim',
     branch = 'v3.x',
-    dependencies = {
-      'nvim-lua/plenary.nvim',
-      'MunifTanjim/nui.nvim',
-      'nvim-tree/nvim-web-devicons', -- optional, but recommended
+    dependencies = {'nvim-lua/plenary.nvim', 'MunifTanjim/nui.nvim', 'nvim-tree/nvim-web-devicons' -- optional, but recommended
     },
-    lazy = false,                    -- neo-tree will lazily load itself
-  },
-  {},
-  {
+    lazy = false -- neo-tree will lazily load itself
+}, {}, {
     'catppuccin/nvim',
     name = 'catppuccin',
-    priority = 1000,
-  },
-  {
+    priority = 1000
+}, {
+  "akinsho/bufferline.nvim",
+  dependencies = { "nvim-tree/nvim-web-devicons" },
+  version = "*",
+  event = "VeryLazy",
+  config = function()
+    require("bufferline").setup({
+      options = {
+        mode = "buffers", -- 🔥 THIS is what makes it editor-only tabs
+
+        diagnostics = "nvim_lsp",
+        always_show_bufferline = false,
+
+        offsets = {
+          {
+            filetype = "neo-tree",
+            text = "Neo-tree",
+            highlight = "Directory",
+            text_align = "left",
+          },
+        },
+      },
+    })
+  end,
+}, {
     'stevearc/oil.nvim',
     ---@module 'oil'
     ---@type oil.SetupOpts
     opts = {
-      default_file_explorer = false,
+        default_file_explorer = false
     },
     -- Optional dependencies
-    dependencies = { {
-      'nvim-mini/mini.icons',
-      opts = {},
-    } },
+    dependencies = {{
+        'nvim-mini/mini.icons',
+        opts = {}
+    }},
     -- dependencies = { "nvim-tree/nvim-web-devicons" }, -- use if you prefer nvim-web-devicons
     -- Lazy loading is not recommended because it is very tricky to make it work correctly in all situations.
-    lazy = false,
-  },
-  {
+    lazy = false
+}, {
     'tpope/vim-sleuth',
-    event = { 'BufReadPost', 'BufNewFile' }, -- Load after your file content
-  },
-  {
+    event = {'BufReadPost', 'BufNewFile'} -- Load after your file content
+}, {
     'https://github.com/farmergreg/vim-lastplace',
-    event = 'BufReadPost',
-  },
-  {
+    event = 'BufReadPost'
+}, {
     'https://github.com/lukas-reineke/indent-blankline.nvim',
-    event = { 'VeryLazy' },
+    event = {'VeryLazy'},
     config = function()
-      require('ibl').setup()
-    end,
-  },
-  {
+        require('ibl').setup()
+    end
+}, {
     'https://github.com/nvim-lualine/lualine.nvim',
     event = 'VeryLazy',
     config = function()
-      require('lualine').setup()
-    end,
-  },
-  -- {
-  --   'hrsh7th/nvim-cmp',
-  --   dependencies = {
-  --     'hrsh7th/cmp-nvim-lsp',
-  --     'L3MON4D3/LuaSnip',
-  --   },
-  -- },
-  {
+        require('lualine').setup()
+    end
+}, -- {
+--   'hrsh7th/nvim-cmp',
+--   dependencies = {
+--     'hrsh7th/cmp-nvim-lsp',
+--     'L3MON4D3/LuaSnip',
+--   },
+-- },
+{
     'lewis6991/gitsigns.nvim',
     config = function()
-      require('gitsigns').setup()
-    end,
-  },
-  {
+        require('gitsigns').setup()
+    end
+}, {
     'stevearc/conform.nvim',
-    event = { 'BufReadPre', 'BufNewFile', 'BufWritePre' },
+    event = {'BufReadPre', 'BufNewFile', 'BufWritePre'},
     config = function()
-      require('conform').setup {
-        formatters_by_ft = {
-          lua = { 'stylua' },
-          javascript = { 'prettier' },
-          typescript = { 'prettier' },
-          python = { 'black' },
-        },
+        require('conform').setup {
+            formatters_by_ft = {
+                lua = {'stylua'},
+                javascript = {'prettier'},
+                typescript = {'prettier'},
+                python = {'black'}
+            },
 
-        format_on_save = {
-          timeout_ms = 500,
-          lsp_fallback = true,
-        },
-      }
-    end,
+            format_on_save = {
+                timeout_ms = 500,
+                lsp_fallback = true
+            }
+        }
+    end
+}, {
+  "folke/trouble.nvim",
+  opts = {}, -- for default options, refer to the configuration section for custom setup.
+  cmd = "Trouble",
+  keys = {
+    {
+      "<leader>xx",
+      "<cmd>Trouble diagnostics toggle<cr>",
+      desc = "Diagnostics (Trouble)",
+    },
+    {
+      "<leader>xX",
+      "<cmd>Trouble diagnostics toggle filter.buf=0<cr>",
+      desc = "Buffer Diagnostics (Trouble)",
+    },
+    {
+      "<leader>cs",
+      "<cmd>Trouble symbols toggle focus=false<cr>",
+      desc = "Symbols (Trouble)",
+    },
+    {
+      "<leader>cl",
+      "<cmd>Trouble lsp toggle focus=false win.position=right<cr>",
+      desc = "LSP Definitions / references / ... (Trouble)",
+    },
+    {
+      "<leader>xL",
+      "<cmd>Trouble loclist toggle<cr>",
+      desc = "Location List (Trouble)",
+    },
+    {
+      "<leader>xQ",
+      "<cmd>Trouble qflist toggle<cr>",
+      desc = "Quickfix List (Trouble)",
+    },
   },
-  {
-    'stevearc/conform.nvim',
+}, {
+    "AckslD/nvim-neoclip.lua",
+    dependencies = {
+        -- you'll need at least one of these
+        -- {'nvim-telescope/telescope.nvim'},
+        -- {'ibhagwan/fzf-lua'},
+    },
     config = function()
-      require('conform').setup {
-        formatters_by_ft = {
-          lua = { 'stylua' },
-          javascript = { 'prettier' },
-          typescript = { 'prettier' },
-          python = { 'black' },
-        },
-
-        format_on_save = {
-          timeout_ms = 500,
-          lsp_fallback = true,
-        },
-      }
-    end,
-  },
-}
+        require('neoclip').setup()
+    end
+}, {
+  "folke/persistence.nvim",
+  event = "BufReadPre", -- this will only start session saving when an actual file was opened
+  opts = {
+    -- add any custom options here
+  }
+}}
 
 -- nvim-tree.view.float = true

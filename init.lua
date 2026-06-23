@@ -1231,7 +1231,12 @@ vim.keymap.set('n', '<leader>gb', ':Gitsigns blame_line<cr>')
 vim.keymap.set('n', '<leader>gp', ':Gitsigns preview_hunk<cr>')
 vim.keymap.set('n', '<leader>gr', ':Gitsigns reset_hunk<cr>')
 
-require('neo-tree').setup {
+require("neo-tree").setup({
+    close_if_last_window = true,
+    popup_border_style = "rounded",
+    enable_git_status = true,
+    enable_diagnostics = true,
+
     filesystem = {
         follow_current_file = {
             enabled = true
@@ -1242,14 +1247,11 @@ require('neo-tree').setup {
         position = "left",
         width = 30,
         mappings = {
-            ["<cr>"] = "open",
-            ["o"] = "open"
+            ["<space>"] = "toggle_node",
+            ["<cr>"] = "open"
         }
-    },
-
-    close_if_last_window = false
-}
-
+    }
+})
 
 
 vim.keymap.set('n', '<leader>e', ':Neotree toggle<cr>')
@@ -1280,9 +1282,28 @@ require('conform').setup {
     }
 }
 
-require('telescope').setup {
-    defaults = {}
-}
+local function tab_open(prompt_bufnr)
+    actions.close(prompt_bufnr)
+    actions.select_tab(prompt_bufnr)
+end
+
+require("telescope").setup({
+    defaults = {
+        mappings = {
+            i = {
+                ["<C-t>"] = function(prompt_bufnr)
+                    actions.select_tab(prompt_bufnr)
+                end
+            },
+            n = {
+                ["<C-t>"] = function(prompt_bufnr)
+                    actions.select_tab(prompt_bufnr)
+                end
+            }
+        }
+    }
+})
+
 
 vim.api.nvim_create_autocmd("LspAttach", {
     callback = function(args)
@@ -1303,5 +1324,7 @@ vim.api.nvim_create_autocmd("LspAttach", {
     end
 })
 
-vim.o.showtabline = 2
+vim.keymap.set("n", "<Tab>", ":BufferLineCycleNext<CR>")
+vim.keymap.set("n", "<S-Tab>", ":BufferLineCyclePrev<CR>")
 
+vim.o.showtabline = 0
