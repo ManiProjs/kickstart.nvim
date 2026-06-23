@@ -1108,9 +1108,21 @@ vim.lsp.config('ruff', {
 
 vim.lsp.enable 'ruff'
 vim.lsp.enable 'sorbet'
+vim.lsp.enable 'ts_ls'
+vim.lsp.enable 'lua_ls'
 
 local builtin = require 'telescope.builtin'
 vim.keymap.set('n', '<leader>ff', builtin.find_files, { desc = 'Telescope find files' })
 vim.keymap.set('n', '<leader>fg', builtin.live_grep, { desc = 'Telescope live grep' })
 vim.keymap.set('n', '<leader>fb', builtin.buffers, { desc = 'Telescope buffers' })
 vim.keymap.set('n', '<leader>fh', builtin.help_tags, { desc = 'Telescope help tags' })
+
+local cmp = require 'cmp'
+
+cmp.setup {
+  mapping = cmp.mapping.preset.insert {
+    ['<CR>'] = cmp.mapping.confirm {
+      select = true,
+    },
+  },
+}

@@ -166,7 +166,12 @@ return {
       'L3MON4D3/LuaSnip',
     },
   },
-  { 'lewis6991/gitsigns.nvim' },
+  {
+    'lewis6991/gitsigns.nvim',
+    config = function()
+      require('gitsigns').setup()
+    end,
+  },
 }
 
 -- nvim-tree.view.float = true
