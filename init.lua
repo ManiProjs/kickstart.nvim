@@ -1095,14 +1095,19 @@ require('lazy').setup({
 
 vim.cmd.colorscheme 'catppuccin-frappe'
 
-
 vim.lsp.config('ruff', {
   init_options = {
     settings = {
       -- Ruff language server settings go here
-    }
-  }
+    },
+  },
 })
 
-vim.lsp.enable('ruff')
+vim.lsp.enable 'ruff'
+vim.lsp.enable 'sorbet'
 
+local builtin = require 'telescope.builtin'
+vim.keymap.set('n', '<leader>ff', builtin.find_files, { desc = 'Telescope find files' })
+vim.keymap.set('n', '<leader>fg', builtin.live_grep, { desc = 'Telescope live grep' })
+vim.keymap.set('n', '<leader>fb', builtin.buffers, { desc = 'Telescope buffers' })
+vim.keymap.set('n', '<leader>fh', builtin.help_tags, { desc = 'Telescope help tags' })
