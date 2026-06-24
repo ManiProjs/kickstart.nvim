@@ -264,7 +264,13 @@ return {{
   event = "BufReadPre", -- this will only start session saving when an actual file was opened
   opts = {
     -- add any custom options here
-  }
+  },
+  {
+  "folke/tokyonight.nvim",
+    lazy = false,
+    priority = 1000,
+    opts = {},
+  },
 }}
 
 -- nvim-tree.view.float = true
