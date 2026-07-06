@@ -271,6 +271,7 @@ return {{
     priority = 1000,
     opts = {},
   },
+  { "ellisonleao/gruvbox.nvim", priority = 1000 , config = true, opts = ...},
 }}
 
 -- nvim-tree.view.float = true

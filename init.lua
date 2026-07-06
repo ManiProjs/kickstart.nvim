@@ -1213,9 +1213,16 @@ require('lazy').setup({ -- NOTE: Plugins can be added with a link (or for a gith
 --     },
 -- })
 
-vim.cmd.colorscheme 'tokyonight'
+require('gruvbox').setup({
+  terminal_colors = true,
+  underline = true,
+})
+
+vim.cmd.colorscheme 'gruvbox'
 
 require('Comment').setup()
+
+vim.opt.guicursor = "a:hor20"
 
 -- LSP configs
 vim.lsp.config('ruff', {
