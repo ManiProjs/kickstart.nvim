@@ -218,9 +218,10 @@ vim.o.number = true
 vim.g.loaded_netrw = 1
 vim.g.loaded_netrwPlugin = 1
 
-filters = {
-  custom = { '^.git$' },
+local neo_tree_filters = {
+    custom = {'^.git$'}
 }
+
 
 -- NOTE: Some terminals have colliding keymaps or are not able to send distinct keycodes
 -- vim.keymap.set("n", "<C-S-h>", "<C-w>H", { desc = "Move window to the left" })
@@ -1213,16 +1214,15 @@ require('lazy').setup({ -- NOTE: Plugins can be added with a link (or for a gith
 --     },
 -- })
 
-require('gruvbox').setup({
-  terminal_colors = true,
-  underline = true,
-})
+-- require('gruvbox').setup({
+--   terminal_colors = true,
+--   underline = true,
+-- })
 
-vim.cmd.colorscheme 'gruvbox'
+vim.cmd.colorscheme 'tokyonight'
 
 require('Comment').setup()
 
-vim.opt.guicursor = "a:hor20"
 
 -- LSP configs
 vim.lsp.config('ruff', {
@@ -1303,6 +1303,7 @@ require('neo-tree').setup {
     follow_current_file = {
       enabled = true,
     },
+    filtered_items = neo_tree_filters,
   },
 
   window = {
@@ -1338,15 +1339,9 @@ require('conform').setup {
       'prettier',
       stop_after_first = true,
     },
-    ruby = { 'rubocop' },
-    html = { 'htmlbeautifier' },
+    html = { 'prettier' },
   },
 }
-
-local function tab_open(prompt_bufnr)
-  actions.close(prompt_bufnr)
-  actions.select_tab(prompt_bufnr)
-end
 
 require('telescope').setup {
   defaults = {
