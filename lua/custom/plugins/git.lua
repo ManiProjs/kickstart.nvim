@@ -6,4 +6,7 @@ return {{"tpope/vim-fugitive"}, {
 }, {
     "sindrets/diffview.nvim",
     cmd = {"DiffviewOpen", "DiffviewClose"}
+}, {
+    "kdheepak/lazygit.nvim",
+    dependencies = {"nvim-lua/plenary.nvim"}
 }}

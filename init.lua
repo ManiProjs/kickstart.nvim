@@ -4,9 +4,9 @@ vim.g.maplocalleader = " "
 vim.g.have_nerd_font = true
 
 require("config.options")
-require("config.keymaps")
 require("config.autocmds")
 
+-- Install lazy.nvim
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 
 if not (vim.uv or vim.loop).fs_stat(lazypath) then
@@ -16,7 +16,9 @@ end
 
 vim.opt.rtp:prepend(lazypath)
 
-require("lazy").setup({require("custom.plugins"), {
+require("lazy").setup({{
+    import = "custom.plugins"
+}, {
     import = "kickstart.plugins"
 }}, {
     ui = {
@@ -37,5 +39,7 @@ require("lazy").setup({require("custom.plugins"), {
         }
     }
 })
+
+require("config.keymaps")
 
 vim.cmd.colorscheme("tokyonight")

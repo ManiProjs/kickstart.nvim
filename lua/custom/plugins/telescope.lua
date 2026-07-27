@@ -25,70 +25,95 @@ return {{
 
         local map = vim.keymap.set
 
-        map("n", "<leader>sh", builtin.help_tags, {
-            desc = "[S]earch [H]elp"
+        -- Search
+        map("n", "<leader>fh", builtin.help_tags, {
+            desc = "Search Help"
         })
 
-        map("n", "<leader>sk", builtin.keymaps, {
-            desc = "[S]earch [K]eymaps"
+        map("n", "<leader>fk", builtin.keymaps, {
+            desc = "Search Keymaps"
         })
 
-        map("n", "<leader>sf", builtin.find_files, {
-            desc = "[S]earch [F]iles"
+        map("n", "<leader>ff", builtin.find_files, {
+            desc = "Search Files"
         })
 
-        map("n", "<leader>ss", builtin.builtin, {
-            desc = "[S]earch [S]elect Telescope"
+        map("n", "<leader>fs", builtin.builtin, {
+            desc = "Search Telescope Pickers"
         })
 
         map("n", "<leader>sw", builtin.grep_string, {
-            desc = "[S]earch current [W]ord"
+            desc = "Search Current Word"
         })
 
-        map("n", "<leader>sg", builtin.live_grep, {
-            desc = "[S]earch by [G]rep"
+        map("n", "<leader>fg", builtin.live_grep, {
+            desc = "Search Grep"
         })
 
-        map("n", "<leader>sd", builtin.diagnostics, {
-            desc = "[S]earch [D]iagnostics"
+        map("n", "<leader>fd", builtin.diagnostics, {
+            desc = "Search Diagnostics"
         })
 
-        map("n", "<leader>sr", builtin.resume, {
-            desc = "[S]earch [R]esume"
+        map("n", "<leader>fr", builtin.resume, {
+            desc = "Search Resume"
         })
 
-        map("n", "<leader>s.", builtin.oldfiles, {
-            desc = "[S]earch Recent Files"
+        map("n", "<leader>f.", builtin.oldfiles, {
+            desc = "Search Recent Files"
         })
 
         map("n", "<leader><leader>", builtin.buffers, {
-            desc = "Find existing buffers"
+            desc = "Find Existing Buffers"
         })
 
+        -- Current buffer search
         map("n", "<leader>/", function()
             builtin.current_buffer_fuzzy_find(require("telescope.themes").get_dropdown({
                 winblend = 10,
                 previewer = false
             }))
         end, {
-            desc = "Search current buffer"
+            desc = "Search Current Buffer"
         })
 
+        -- Search open files
         map("n", "<leader>s/", function()
             builtin.live_grep({
                 grep_open_files = true,
                 prompt_title = "Live Grep in Open Files"
             })
         end, {
-            desc = "Search open files"
+            desc = "Search Open Files"
         })
 
-        map("n", "<leader>sn", function()
+        -- Search Neovim config
+        map("n", "<leader>fn", function()
             builtin.find_files({
                 cwd = vim.fn.stdpath("config")
             })
         end, {
-            desc = "Search Neovim files"
+            desc = "Search Neovim Config"
+        })
+
+        -- Git
+        map("n", "<leader>gs", builtin.git_status, {
+            desc = "Git Status"
+        })
+
+        map("n", "<leader>gc", builtin.git_commits, {
+            desc = "Git Commits"
+        })
+
+        map("n", "<leader>gb", builtin.git_branches, {
+            desc = "Git Branches"
+        })
+
+        map("n", "<leader>gB", builtin.git_bcommits, {
+            desc = "Git Buffer Commits"
+        })
+
+        map("n", "<leader>gS", builtin.git_stash, {
+            desc = "Git Stash"
         })
     end
 }}

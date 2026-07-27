@@ -23,3 +23,21 @@ map("n", "<leader>to", ":tabonly<CR>")
 
 map("n", "<Tab>", ":BufferLineCycleNext<CR>")
 map("n", "<S-Tab>", ":BufferLineCyclePrev<CR>")
+
+-- LazyGit
+map("n", "<leader>gg", "<cmd>LazyGit<CR>", {
+    desc = "Open LazyGit"
+})
+
+map("n", "<leader>gf", "<cmd>LazyGitCurrentFile<CR>", {
+    desc = "LazyGit Current File"
+})
+
+map("n", "<leader>gl", "<cmd>LazyGitLog<CR>", {
+    desc = "LazyGit Log"
+})
+
+map("n", "<leader>gL", "<cmd>LazyGitLogCurrentFile<CR>", {
+    desc = "LazyGit Log Current File"
+})
+

@@ -9,6 +9,8 @@ vim.lsp.enable("sorbet")
 vim.lsp.enable("ts_ls")
 vim.lsp.enable("lua_ls")
 vim.lsp.enable("html")
+vim.lsp.enable("ruff")
+vim.lsp.enable("pyright")
 
 vim.api.nvim_create_autocmd("LspAttach", {
     callback = function(args)
