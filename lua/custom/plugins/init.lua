@@ -30,4 +30,8 @@ return {{
     import = "custom.plugins.util"
 }, {
     import = "custom.plugins.terminal"
+}, {
+    import = "custom.plugins.snippets"
+}, {
+    import = "custom.plugins.whichkey"
 }}

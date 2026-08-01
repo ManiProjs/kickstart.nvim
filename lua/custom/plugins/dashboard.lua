@@ -1,10 +1,12 @@
 return {
-    "nvimdev/dashboard-nvim",
+    "goolord/alpha-nvim",
     event = "VimEnter",
+
     dependencies = {"nvim-tree/nvim-web-devicons"},
 
     config = function()
-        local dashboard = require("dashboard")
+        local alpha = require("alpha")
+        local dashboard = require("alpha.themes.dashboard")
 
         -- Greeting
         local hour = tonumber(os.date("%H"))
@@ -19,71 +21,54 @@ return {
         end
 
         -- Header
-        local logo = {[[                                              ]],
-                      [[ ███╗   ██╗███████╗ ██████╗ ██╗   ██╗██╗███╗   ███╗ ]],
-                      [[ ████╗  ██║██╔════╝██╔═══██╗██║   ██║██║████╗ ████║ ]],
-                      [[ ██╔██╗ ██║█████╗  ██║   ██║██║   ██║██║██╔████╔██║ ]],
-                      [[ ██║╚██╗██║██╔══╝  ██║   ██║╚██╗ ██╔╝██║██║╚██╔╝██║ ]],
-                      [[ ██║ ╚████║███████╗╚██████╔╝ ╚████╔╝ ██║██║ ╚═╝ ██║ ]],
-                      [[ ╚═╝  ╚═══╝╚══════╝ ╚═════╝   ╚═══╝  ╚═╝╚═╝     ╚═╝ ]],
-                      [[                                              ]], [[              ]] .. greeting,
-                      [[                                              ]]}
+        dashboard.section.header.val = {"                                              ",
+                                        "        ███╗   ██╗███████╗ ██████╗ ██╗   ██╗    ",
+                                        "        ████╗  ██║██╔════╝██╔═══██╗██║   ██║    ",
+                                        "        ██╔██╗ ██║█████╗  ██║   ██║██║   ██║    ",
+                                        "        ██║╚██╗██║██╔══╝  ██║   ██║╚██╗ ██╔╝    ",
+                                        "        ██║ ╚████║███████╗╚██████╔╝ ╚████╔╝     ",
+                                        "        ╚═╝  ╚═══╝╚══════╝ ╚═════╝   ╚═══╝      ",
+                                        "                                              ",
+                                        "          ⚡ CODE • CREATE • CUSTOMIZE ⚡       ",
+                                        "                                              ", "              " .. greeting,
+                                        "                                              "}
 
-        dashboard.setup({
-            theme = "doom",
+        dashboard.section.header.opts.hl = "DashboardHeader"
 
-            config = {
-                header = logo,
+        -- Buttons
+        dashboard.section.buttons.val = {dashboard.button("f", "󰱼  Find File", "<cmd>Telescope find_files<CR>"),
+                                         dashboard.button("r", "󰈚  Recent Files", "<cmd>Telescope oldfiles<CR>"),
+                                         dashboard.button("g", "󰊄  Live Grep", "<cmd>Telescope live_grep<CR>"),
+                                         dashboard.button("e", "󰙅  Explorer",
+            "<cmd>Neotree filesystem reveal left toggle<CR>"), dashboard.button("m", "󰒲  Mason", "<cmd>Mason<CR>"),
+                                         dashboard.button("l", "󰒲  Lazy", "<cmd>Lazy<CR>"),
+                                         dashboard.button("c", "  Config", "<cmd>edit ~/.config/nvim/init.lua<CR>"),
+                                         dashboard.button("q", "󰩈  Quit", "<cmd>qa<CR>")}
 
-                center = {{
-                    icon = "󰱼 ",
-                    desc = " Find File",
-                    key = "f",
-                    action = "Telescope find_files"
-                }, {
-                    icon = "󰈚 ",
-                    desc = " Recent Files",
-                    key = "r",
-                    action = "Telescope oldfiles"
-                }, {
-                    icon = "󰊄 ",
-                    desc = " Live Grep",
-                    key = "g",
-                    action = "Telescope live_grep"
-                }, {
-                    icon = "󱋡 ",
-                    desc = " File Browser",
-                    key = "e",
-                    action = "Oil"
-                }, {
-                    icon = "󰒲 ",
-                    desc = " Lazy",
-                    key = "l",
-                    action = "Lazy"
-                }, {
-                    icon = " ",
-                    desc = " Config",
-                    key = "c",
-                    action = "edit ~/.config/nvim/init.lua"
-                }, {
-                    icon = "󰩈 ",
-                    desc = " Quit",
-                    key = "q",
-                    action = "qa"
-                }},
+        for _, button in ipairs(dashboard.section.buttons.val) do
+            button.opts.hl = "DashboardCenter"
+            button.opts.hl_shortcut = "DashboardShortcut"
+        end
 
-                footer = function()
-                    local stats = require("lazy").stats()
+        -- Footer
+        dashboard.section.footer.val = {"",
+                                        "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━",
+                                        "Loading plugins...", "󰄛 Happy coding!"}
+        dashboard.section.footer.opts.hl = "DashboardFooter"
 
-                    return {"",
-                            "────────────────────────────────────────────",
-                            string.format("⚡ %d plugins loaded in %.2f ms", stats.count, stats.startuptime),
-                            "Happy coding ❤️"}
-                end
-            }
-        })
+        -- Layout
+        dashboard.config.layout = {{
+            type = "padding",
+            val = 2
+        }, dashboard.section.header, {
+            type = "padding",
+            val = 2
+        }, dashboard.section.buttons, {
+            type = "padding",
+            val = 2
+        }, dashboard.section.footer}
 
-        -- Colors
+        -- Highlights
         vim.api.nvim_set_hl(0, "DashboardHeader", {
             fg = "#89b4fa",
             bold = true
@@ -101,6 +86,46 @@ return {
         vim.api.nvim_set_hl(0, "DashboardShortcut", {
             fg = "#f9e2af",
             bold = true
+        })
+
+        alpha.setup(dashboard.config)
+
+        -- Update footer once Lazy has finished loading
+        vim.api.nvim_create_autocmd("User", {
+            pattern = "LazyVimStarted",
+            callback = function()
+                local ok, lazy = pcall(require, "lazy")
+                if not ok then
+                    return
+                end
+
+                local stats = lazy.stats()
+
+                dashboard.section.footer.val = {"",
+                                                "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━",
+                                                string.format("⚡ %d plugins loaded in %.2f ms", stats.count,
+                    stats.startuptime), "󰄛 Happy coding!"}
+
+                pcall(vim.cmd.AlphaRedraw)
+            end
+        })
+
+        -- Hide tabline while Alpha is open
+        local old_showtabline = vim.o.showtabline
+
+        vim.api.nvim_create_autocmd("User", {
+            pattern = "AlphaReady",
+            callback = function()
+                vim.o.showtabline = 0
+            end
+        })
+
+        vim.api.nvim_create_autocmd("BufUnload", {
+            callback = function(args)
+                if vim.bo[args.buf].filetype == "alpha" then
+                    vim.o.showtabline = old_showtabline
+                end
+            end
         })
     end
 }

@@ -3,6 +3,11 @@ vim.g.maplocalleader = " "
 
 vim.g.have_nerd_font = true
 
+vim.opt.expandtab = true -- Use spaces instead of tabs
+vim.opt.tabstop = 4 -- A tab looks like 4 spaces
+vim.opt.shiftwidth = 4 -- Indentation size
+vim.opt.softtabstop = 4 -- Backspace behaves like 4 spaces
+
 require("config.options")
 require("config.autocmds")
 
@@ -38,6 +43,16 @@ require("lazy").setup({{
             lazy = "💤"
         }
     }
+})
+
+vim.api.nvim_create_autocmd("FileType", {
+    pattern = {"javascript", "typescript", "javascriptreact", "typescriptreact"},
+    callback = function()
+        vim.opt_local.expandtab = true
+        vim.opt_local.tabstop = 2
+        vim.opt_local.shiftwidth = 2
+        vim.opt_local.softtabstop = 2
+    end
 })
 
 require("config.keymaps")
