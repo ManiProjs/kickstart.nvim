@@ -1,28 +1,69 @@
 local map = vim.keymap.set
 
-map("n", "<Esc>", "<cmd>nohlsearch<CR>")
+local opts = {
+    noremap = true,
+    silent = true
+}
 
-map("n", "<leader>q", vim.diagnostic.setloclist)
+-- Clear search highlight
+map("n", "<Esc>", "<cmd>nohlsearch<CR>", {
+    desc = "Clear search highlight"
+})
 
-map("t", "<Esc><Esc>", "<C-\\><C-n>")
+-- Diagnostics
+map("n", "<leader>xq", vim.diagnostic.setloclist, {
+    desc = "Open diagnostics list"
+})
 
-map("n", "<C-h>", "<C-w><C-h>")
-map("n", "<C-l>", "<C-w><C-l>")
-map("n", "<C-j>", "<C-w><C-j>")
-map("n", "<C-k>", "<C-w><C-k>")
+map("n", "<leader>xd", vim.diagnostic.open_float, {
+    desc = "Show diagnostic float"
+})
 
-map("n", "<leader>e", ":Neotree toggle<CR>")
+map("n", "[d", vim.diagnostic.goto_prev, {
+    desc = "Previous diagnostic"
+})
 
-map("n", "<leader>d", vim.diagnostic.open_float)
-map("n", "[d", vim.diagnostic.goto_prev)
-map("n", "]d", vim.diagnostic.goto_next)
+map("n", "]d", vim.diagnostic.goto_next, {
+    desc = "Next diagnostic"
+})
 
-map("n", "<leader>tn", ":tabnew<CR>")
-map("n", "<leader>tc", ":tabclose<CR>")
-map("n", "<leader>to", ":tabonly<CR>")
+-- Terminal escape
+map("t", "<Esc><Esc>", "<C-\\><C-n>", {
+    desc = "Exit terminal mode"
+})
 
-map("n", "<Tab>", ":BufferLineCycleNext<CR>")
-map("n", "<S-Tab>", ":BufferLineCyclePrev<CR>")
+-- Window navigation
+map("n", "<C-h>", "<C-w><C-h>", opts)
+map("n", "<C-l>", "<C-w><C-l>", opts)
+map("n", "<C-j>", "<C-w><C-j>", opts)
+map("n", "<C-k>", "<C-w><C-k>", opts)
+
+-- Neo-tree
+map("n", "<leader>e", "<cmd>Neotree toggle<CR>", {
+    desc = "Toggle file explorer"
+})
+
+-- Tabs
+map("n", "<leader>tn", "<cmd>tabnew<CR>", {
+    desc = "New tab"
+})
+
+map("n", "<leader>tc", "<cmd>tabclose<CR>", {
+    desc = "Close tab"
+})
+
+map("n", "<leader>to", "<cmd>tabonly<CR>", {
+    desc = "Close other tabs"
+})
+
+-- Bufferline
+map("n", "<Tab>", "<cmd>BufferLineCycleNext<CR>", {
+    desc = "Next buffer"
+})
+
+map("n", "<S-Tab>", "<cmd>BufferLineCyclePrev<CR>", {
+    desc = "Previous buffer"
+})
 
 -- LazyGit
 map("n", "<leader>gg", "<cmd>LazyGit<CR>", {
@@ -30,36 +71,40 @@ map("n", "<leader>gg", "<cmd>LazyGit<CR>", {
 })
 
 map("n", "<leader>gf", "<cmd>LazyGitCurrentFile<CR>", {
-    desc = "LazyGit Current File"
+    desc = "LazyGit current file"
 })
 
 map("n", "<leader>gl", "<cmd>LazyGitLog<CR>", {
-    desc = "LazyGit Log"
+    desc = "LazyGit log"
 })
 
 map("n", "<leader>gL", "<cmd>LazyGitLogCurrentFile<CR>", {
-    desc = "LazyGit Log Current File"
+    desc = "LazyGit current file log"
 })
 
--- load the session for the current directory
-vim.keymap.set("n", "<leader>qs", function()
+-- Persistence
+map("n", "<leader>qs", function()
     require("persistence").load()
-end)
+end, {
+    desc = "Restore session"
+})
 
--- select a session to load
-vim.keymap.set("n", "<leader>qS", function()
+map("n", "<leader>qS", function()
     require("persistence").select()
-end)
+end, {
+    desc = "Select session"
+})
 
--- load the last session
-vim.keymap.set("n", "<leader>ql", function()
+map("n", "<leader>ql", function()
     require("persistence").load({
         last = true
     })
-end)
+end, {
+    desc = "Restore last session"
+})
 
--- stop Persistence => session won't be saved on exit
-vim.keymap.set("n", "<leader>qd", function()
+map("n", "<leader>qd", function()
     require("persistence").stop()
-end)
-
+end, {
+    desc = "Disable session saving"
+})
