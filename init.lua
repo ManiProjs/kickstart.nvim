@@ -11,6 +11,8 @@ vim.opt.softtabstop = 4 -- Backspace behaves like 4 spaces
 require("config.options")
 require("config.autocmds")
 
+vim.o.sessionoptions = "buffers,curdir,folds,help,tabpages,winsize,terminal"
+
 -- Install lazy.nvim
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 
