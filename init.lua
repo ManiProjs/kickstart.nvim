@@ -58,5 +58,6 @@ vim.api.nvim_create_autocmd("FileType", {
 })
 
 require("config.keymaps")
+require("config.lsp")
 
 vim.cmd.colorscheme("tokyonight")
