@@ -76,8 +76,19 @@ start_on_filetype('lua', {
 
 start_on_filetype({ 'javascript', 'javascriptreact', 'typescript', 'typescriptreact' }, {
   name = 'ts_ls',
-  cmd = { 'typescript-language-server', '--stdio' },
-  root_markers = { 'tsconfig.json', 'jsconfig.json', 'package.json', '.git' },
+  cmd = {
+    'bun',
+    'x',
+    'tsc',
+    '--lsp',
+    '--stdio',
+  },
+  root_markers = {
+    'tsconfig.json',
+    'jsconfig.json',
+    'package.json',
+    '.git',
+  },
 })
 
 -- ============================================================
