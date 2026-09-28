@@ -1,22 +1,28 @@
 return {{
-    "karb94/neoscroll.nvim",
+    "numToStr/Comment.nvim",
+    event = "VeryLazy",
     opts = {}
 }, {
-    "AckslD/nvim-neoclip.lua",
+    "windwp/nvim-autopairs",
+    event = "InsertEnter",
+
+    opts = {
+        check_ts = true,
+
+        fast_wrap = {
+            map = "<M-e>",
+            chars = {"{", "[", "(", '"', "'"}
+        }
+    }
+}, {
+    "kylechui/nvim-surround",
+    version = "*",
+    event = "VeryLazy",
     opts = {}
 }, {
-    "folke/todo-comments.nvim",
+    "windwp/nvim-ts-autotag",
+
+    ft = {"html", "javascript", "javascriptreact", "typescript", "typescriptreact", "vue", "xml"},
+
     opts = {}
-}, {
-    "folke/zen-mode.nvim",
-    opts = {}
-}, {
-    "folke/twilight.nvim",
-    opts = {}
-}, {
-    "NvChad/showkeys",
-    cmd = "ShowkeysToggle"
-}, {
-    "tpope/vim-sleuth",
-    event = {"BufReadPost", "BufNewFile"}
 }}

@@ -13,15 +13,11 @@ return {{
 }, {
     import = "custom.plugins.git"
 }, {
-    import = "custom.plugins.lsp"
-}, {
     import = "custom.plugins.navigation"
 }, {
     import = "custom.plugins.projects"
 }, {
     import = "custom.plugins.sessions"
-}, {
-    import = "custom.plugins.telescope"
 }, {
     import = "custom.plugins.treesitter"
 }, {
@@ -29,9 +25,7 @@ return {{
 }, {
     import = "custom.plugins.util"
 }, {
-    import = "custom.plugins.terminal"
-}, {
-    import = "custom.plugins.snippets"
-}, {
     import = "custom.plugins.whichkey"
+}, {
+    import = "custom.plugins.snacks"
 }}
