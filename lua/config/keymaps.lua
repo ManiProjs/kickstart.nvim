@@ -199,6 +199,33 @@ map("n", "<leader>qk", "<cmd>cprevious<CR>", {
 })
 
 -- ============================================================================
+-- Telescope
+-- ============================================================================
+map("n", "<leader>ff", "<cmd>Telescope find_files<CR>", {
+    desc = "Find files"
+})
+
+map("n", "<leader>fg", "<cmd>Telescope live_grep<CR>", {
+    desc = "Live grep"
+})
+
+map("n", "<leader>fb", "<cmd>Telescope buffers<CR>", {
+    desc = "Find buffers"
+})
+
+map("n", "<leader>fr", "<cmd>Telescope oldfiles<CR>", {
+    desc = "Recent files"
+})
+
+map("n", "<leader>fh", "<cmd>Telescope help_tags<CR>", {
+    desc = "Help"
+})
+
+map("n", "<leader>fp", "<cmd>Telescope projects<CR>", {
+    desc = "Projects"
+})
+
+-- ============================================================================
 -- Git
 -- ============================================================================
 
@@ -229,3 +256,43 @@ map("n", "<leader>gH", "<cmd>DiffviewFileHistory %<CR>", {
 map("n", "<leader>co", "<cmd>AerialToggle!<CR>", {
     desc = "Code outline"
 })
+
+-- ============================================================================
+-- Harpoon
+-- ============================================================================
+map("n", "<leader>ha", function()
+    require("harpoon"):list():add()
+end, {
+    desc = "Add file"
+})
+
+map("n", "<leader>hh", function()
+    require("harpoon").ui:toggle_quick_menu(require("harpoon"):list())
+end, {
+    desc = "Harpoon menu"
+})
+
+map("n", "<leader>h1", function()
+    require("harpoon"):list():select(1)
+end, {
+    desc = "Harpoon file 1"
+})
+
+map("n", "<leader>h2", function()
+    require("harpoon"):list():select(2)
+end, {
+    desc = "Harpoon file 2"
+})
+
+map("n", "<leader>h3", function()
+    require("harpoon"):list():select(3)
+end, {
+    desc = "Harpoon file 3"
+})
+
+map("n", "<leader>h4", function()
+    require("harpoon"):list():select(4)
+end, {
+    desc = "Harpoon file 4"
+})
+

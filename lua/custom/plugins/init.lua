@@ -28,4 +28,6 @@ return {{
     import = "custom.plugins.whichkey"
 }, {
     import = "custom.plugins.snacks"
+}, {
+    import = "custom.plugins.debug"
 }}
