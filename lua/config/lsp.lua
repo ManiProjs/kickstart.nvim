@@ -1,65 +1,81 @@
 local capabilities = require('blink.cmp').get_lsp_capabilities()
 
 -- ============================================================================
--- Helpers
--- ============================================================================
-
-local function start_lsp(bufnr, config)
-  local root = vim.fs.root(bufnr, config.root_markers or { '.git' })
-
-  if not root then
-    root = vim.fs.dirname(vim.api.nvim_buf_get_name(bufnr))
-  end
-
-  vim.lsp.start({
-    name = config.name,
-    cmd = config.cmd,
-    capabilities = capabilities,
-    root_dir = root,
-    settings = config.settings,
-  }, {
-    bufnr = bufnr,
-  })
-end
-
-local function start_on_filetype(filetypes, config)
-  vim.api.nvim_create_autocmd('FileType', {
-    pattern = filetypes,
-    callback = function(args)
-      start_lsp(args.buf, config)
-    end,
-  })
-end
-
--- ============================================================================
 -- Python
 -- ============================================================================
 
-start_on_filetype('python', {
-  name = 'pyright',
+vim.lsp.config('pyright', {
   cmd = { 'pyright-langserver', '--stdio' },
 
-  root_markers = { 'pyproject.toml', 'setup.py', 'setup.cfg', 'requirements.txt', 'Pipfile', 'poetry.lock', 'uv.lock', '.git' },
+  filetypes = { 'python' },
+
+  root_markers = {
+    'uv.lock',
+    'pyproject.toml',
+    'setup.py',
+    'setup.cfg',
+    'requirements.txt',
+    'Pipfile',
+    'poetry.lock',
+    '.git',
+  },
+
+  capabilities = capabilities,
+
+  before_init = function(params)
+    local root = params.rootPath
+
+    if not root then
+      return
+    end
+
+    local python = root .. '/.venv/bin/python'
+
+    if vim.fn.executable(python) == 1 then
+      params.initializationOptions = vim.tbl_deep_extend('force', params.initializationOptions or {}, {
+        pythonPath = python,
+      })
+    end
+  end,
 })
 
-start_on_filetype('python', {
-  name = 'ruff',
+vim.lsp.enable 'pyright'
+
+vim.lsp.config('ruff', {
   cmd = { 'ruff', 'server' },
 
-  root_markers = { 'pyproject.toml', 'ruff.toml', '.ruff.toml', '.git' },
+  filetypes = { 'python' },
+
+  root_markers = {
+    'pyproject.toml',
+    'ruff.toml',
+    '.ruff.toml',
+    '.git',
+  },
+
+  capabilities = capabilities,
 
   settings = {},
 })
+
+vim.lsp.enable 'ruff'
 
 -- ============================================================================
 -- Lua
 -- ============================================================================
 
-start_on_filetype('lua', {
-  name = 'lua_ls',
+vim.lsp.config('lua_ls', {
   cmd = { 'lua-language-server' },
 
-  root_markers = { '.luarc.json', '.luarc.jsonc', '.git' },
+  filetypes = { 'lua' },
+
+  root_markers = {
+    '.luarc.json',
+    '.luarc.jsonc',
+    '.git',
+  },
+
+  capabilities = capabilities,
 
   settings = {
     Lua = {
@@ -82,14 +98,21 @@ start_on_filetype('lua', {
   },
 })
 
+vim.lsp.enable 'lua_ls'
+
 -- ============================================================================
 -- JavaScript / TypeScript
 -- ============================================================================
 
-start_on_filetype({ 'javascript', 'javascriptreact', 'typescript', 'typescriptreact' }, {
-  name = 'ts_ls',
-
+vim.lsp.config('ts_ls', {
   cmd = { 'bun', 'x', 'tsc', '--lsp', '--stdio' },
+
+  filetypes = {
+    'javascript',
+    'javascriptreact',
+    'typescript',
+    'typescriptreact',
+  },
 
   root_markers = {
     'tsconfig.json',
@@ -102,39 +125,70 @@ start_on_filetype({ 'javascript', 'javascriptreact', 'typescript', 'typescriptre
     'package-lock.json',
     '.git',
   },
+
+  capabilities = capabilities,
 })
+
+vim.lsp.enable 'ts_ls'
 
 -- ============================================================================
 -- HTML
 -- ============================================================================
 
-start_on_filetype('html', {
-  name = 'html',
+vim.lsp.config('html', {
   cmd = { 'vscode-html-language-server', '--stdio' },
 
-  root_markers = { 'package.json', '.git' },
+  filetypes = { 'html' },
+
+  root_markers = {
+    'package.json',
+    '.git',
+  },
+
+  capabilities = capabilities,
 })
+
+vim.lsp.enable 'html'
 
 -- ============================================================================
 -- CSS / SCSS / LESS
 -- ============================================================================
 
-start_on_filetype({ 'css', 'scss', 'less' }, {
-  name = 'cssls',
-
+vim.lsp.config('cssls', {
   cmd = { 'vscode-css-language-server', '--stdio' },
 
-  root_markers = { 'package.json', '.git' },
+  filetypes = {
+    'css',
+    'scss',
+    'less',
+  },
+
+  root_markers = {
+    'package.json',
+    '.git',
+  },
+
+  capabilities = capabilities,
 })
+
+vim.lsp.enable 'cssls'
 
 -- ============================================================================
 -- Tailwind CSS
 -- ============================================================================
 
-start_on_filetype({ 'html', 'css', 'scss', 'javascript', 'javascriptreact', 'typescript', 'typescriptreact' }, {
-  name = 'tailwindcss',
-
+vim.lsp.config('tailwindcss', {
   cmd = { 'tailwindcss-language-server', '--stdio' },
+
+  filetypes = {
+    'html',
+    'css',
+    'scss',
+    'javascript',
+    'javascriptreact',
+    'typescript',
+    'typescriptreact',
+  },
 
   root_markers = {
     'tailwind.config.js',
@@ -147,114 +201,207 @@ start_on_filetype({ 'html', 'css', 'scss', 'javascript', 'javascriptreact', 'typ
     'package.json',
     '.git',
   },
+
+  capabilities = capabilities,
 })
+
+vim.lsp.enable 'tailwindcss'
 
 -- ============================================================================
 -- JSON
 -- ============================================================================
 
-start_on_filetype({ 'json', 'jsonc' }, {
-  name = 'jsonls',
-
+vim.lsp.config('jsonls', {
   cmd = { 'vscode-json-language-server', '--stdio' },
 
-  root_markers = { 'package.json', 'tsconfig.json', '.git' },
+  filetypes = {
+    'json',
+    'jsonc',
+  },
+
+  root_markers = {
+    'package.json',
+    'tsconfig.json',
+    '.git',
+  },
+
+  capabilities = capabilities,
 })
+
+vim.lsp.enable 'jsonls'
 
 -- ============================================================================
 -- YAML
 -- ============================================================================
 
-start_on_filetype({ 'yaml', 'yaml.docker-compose' }, {
-  name = 'yamlls',
-
+vim.lsp.config('yamlls', {
   cmd = { 'yaml-language-server', '--stdio' },
 
-  root_markers = { '.yamllint', 'package.json', '.git' },
+  filetypes = {
+    'yaml',
+    'yaml.docker-compose',
+  },
+
+  root_markers = {
+    '.yamllint',
+    'package.json',
+    '.git',
+  },
+
+  capabilities = capabilities,
 })
+
+vim.lsp.enable 'yamlls'
 
 -- ============================================================================
 -- Markdown
 -- ============================================================================
 
-start_on_filetype('markdown', {
-  name = 'marksman',
-
+vim.lsp.config('marksman', {
   cmd = { 'marksman', 'server' },
 
-  root_markers = { '.marksman.toml', '.git' },
+  filetypes = { 'markdown' },
+
+  root_markers = {
+    '.marksman.toml',
+    '.git',
+  },
+
+  capabilities = capabilities,
 })
+
+vim.lsp.enable 'marksman'
 
 -- ============================================================================
 -- Bash / Shell
 -- ============================================================================
 
-start_on_filetype({ 'sh', 'bash', 'zsh' }, {
-  name = 'bashls',
-
+vim.lsp.config('bashls', {
   cmd = { 'bash-language-server', 'start' },
 
-  root_markers = { '.git' },
+  filetypes = {
+    'sh',
+    'bash',
+    'zsh',
+  },
+
+  root_markers = {
+    '.git',
+  },
+
+  capabilities = capabilities,
 })
+
+vim.lsp.enable 'bashls'
 
 -- ============================================================================
 -- TOML
 -- ============================================================================
 
-start_on_filetype('toml', {
-  name = 'taplo',
-
+vim.lsp.config('taplo', {
   cmd = { 'taplo', 'lsp', 'stdio' },
 
-  root_markers = { 'pyproject.toml', 'Cargo.toml', 'taplo.toml', '.git' },
+  filetypes = { 'toml' },
+
+  root_markers = {
+    'pyproject.toml',
+    'Cargo.toml',
+    'taplo.toml',
+    '.git',
+  },
+
+  capabilities = capabilities,
 })
+
+vim.lsp.enable 'taplo'
 
 -- ============================================================================
 -- Docker
 -- ============================================================================
 
-start_on_filetype({ 'dockerfile', 'dockerfile_alt' }, {
-  name = 'dockerls',
-
+vim.lsp.config('dockerls', {
   cmd = { 'docker-langserver', '--stdio' },
 
-  root_markers = { 'docker-compose.yml', 'docker-compose.yaml', 'compose.yml', 'compose.yaml', 'Dockerfile', '.git' },
+  filetypes = {
+    'dockerfile',
+    'dockerfile_alt',
+  },
+
+  root_markers = {
+    'docker-compose.yml',
+    'docker-compose.yaml',
+    'compose.yml',
+    'compose.yaml',
+    'Dockerfile',
+    '.git',
+  },
+
+  capabilities = capabilities,
 })
+
+vim.lsp.enable 'dockerls'
 
 -- ============================================================================
 -- SQL
 -- ============================================================================
 
-start_on_filetype('sql', {
-  name = 'sqls',
-
+vim.lsp.config('sqls', {
   cmd = { 'sqls' },
 
-  root_markers = { '.sqls.yml', '.sqls.yaml', '.git' },
+  filetypes = { 'sql' },
+
+  root_markers = {
+    '.sqls.yml',
+    '.sqls.yaml',
+    '.git',
+  },
+
+  capabilities = capabilities,
 })
+
+vim.lsp.enable 'sqls'
 
 -- ============================================================================
 -- Ruby
 -- ============================================================================
 
-start_on_filetype('ruby', {
-  name = 'ruby_lsp',
-
+vim.lsp.config('ruby_lsp', {
   cmd = { 'ruby-lsp' },
 
-  root_markers = { 'Gemfile', '.ruby-version', '.git' },
+  filetypes = { 'ruby' },
+
+  root_markers = {
+    'Gemfile',
+    '.ruby-version',
+    '.git',
+  },
+
+  capabilities = capabilities,
 })
+
+vim.lsp.enable 'ruby_lsp'
 
 -- ============================================================================
 -- Go
 -- ============================================================================
 
-start_on_filetype({ 'go', 'gomod', 'gowork', 'gotmpl' }, {
-  name = 'gopls',
-
+vim.lsp.config('gopls', {
   cmd = { 'gopls' },
 
-  root_markers = { 'go.work', 'go.mod', '.git' },
+  filetypes = {
+    'go',
+    'gomod',
+    'gowork',
+    'gotmpl',
+  },
+
+  root_markers = {
+    'go.work',
+    'go.mod',
+    '.git',
+  },
+
+  capabilities = capabilities,
 
   settings = {
     gopls = {
@@ -270,16 +417,24 @@ start_on_filetype({ 'go', 'gomod', 'gowork', 'gotmpl' }, {
   },
 })
 
+vim.lsp.enable 'gopls'
+
 -- ============================================================================
 -- Rust
 -- ============================================================================
 
-start_on_filetype('rust', {
-  name = 'rust_analyzer',
-
+vim.lsp.config('rust_analyzer', {
   cmd = { 'rust-analyzer' },
 
-  root_markers = { 'Cargo.toml', 'rust-project.json', '.git' },
+  filetypes = { 'rust' },
+
+  root_markers = {
+    'Cargo.toml',
+    'rust-project.json',
+    '.git',
+  },
+
+  capabilities = capabilities,
 
   settings = {
     ['rust-analyzer'] = {
@@ -298,16 +453,25 @@ start_on_filetype('rust', {
   },
 })
 
+vim.lsp.enable 'rust_analyzer'
+
 -- ============================================================================
 -- Nix
 -- ============================================================================
 
-start_on_filetype('nix', {
-  name = 'nil_ls',
-
+vim.lsp.config('nil_ls', {
   cmd = { 'nil' },
 
-  root_markers = { 'flake.nix', 'default.nix', 'shell.nix', '.git' },
+  filetypes = { 'nix' },
+
+  root_markers = {
+    'flake.nix',
+    'default.nix',
+    'shell.nix',
+    '.git',
+  },
+
+  capabilities = capabilities,
 
   settings = {
     ['nil'] = {
@@ -318,89 +482,173 @@ start_on_filetype('nix', {
   },
 })
 
+vim.lsp.enable 'nil_ls'
+
 -- ============================================================================
 -- C / C++
 -- ============================================================================
 
-start_on_filetype({ 'c', 'cpp', 'objc', 'objcpp' }, {
-  name = 'clangd',
+vim.lsp.config('clangd', {
+  cmd = {
+    'clangd',
+    '--background-index',
+    '--clang-tidy',
+    '--completion-style=detailed',
+    '--header-insertion=iwyu',
+  },
 
-  cmd = { 'clangd', '--background-index', '--clang-tidy', '--completion-style=detailed', '--header-insertion=iwyu' },
+  filetypes = {
+    'c',
+    'cpp',
+    'objc',
+    'objcpp',
+  },
 
-  root_markers = { 'compile_commands.json', 'compile_flags.txt', 'CMakeLists.txt', 'Makefile', 'meson.build', '.git' },
+  root_markers = {
+    'compile_commands.json',
+    'compile_flags.txt',
+    'CMakeLists.txt',
+    'Makefile',
+    'meson.build',
+    '.git',
+  },
+
+  capabilities = capabilities,
 })
+
+vim.lsp.enable 'clangd'
 
 -- ============================================================================
 -- QML
 -- ============================================================================
 
-start_on_filetype('qml', {
-  name = 'qmlls',
-
+vim.lsp.config('qmlls', {
   cmd = { 'qmlls' },
 
-  root_markers = { 'CMakeLists.txt', 'qmldir', '.git' },
+  filetypes = { 'qml' },
+
+  root_markers = {
+    'CMakeLists.txt',
+    'qmldir',
+    '.git',
+  },
+
+  capabilities = capabilities,
 })
+
+vim.lsp.enable 'qmlls'
 
 -- ============================================================================
 -- Java
 -- ============================================================================
 
-start_on_filetype('java', {
-  name = 'jdtls',
-
+vim.lsp.config('jdtls', {
   cmd = { 'jdtls' },
 
-  root_markers = { 'pom.xml', 'build.gradle', 'build.gradle.kts', 'settings.gradle', 'settings.gradle.kts', '.git' },
+  filetypes = { 'java' },
+
+  root_markers = {
+    'pom.xml',
+    'build.gradle',
+    'build.gradle.kts',
+    'settings.gradle',
+    'settings.gradle.kts',
+    '.git',
+  },
+
+  capabilities = capabilities,
 })
+
+vim.lsp.enable 'jdtls'
 
 -- ============================================================================
 -- Zig
 -- ============================================================================
 
-start_on_filetype('zig', {
-  name = 'zls',
-
+vim.lsp.config('zls', {
   cmd = { 'zls' },
 
-  root_markers = { 'build.zig', 'build.zig.zon', '.git' },
+  filetypes = { 'zig' },
+
+  root_markers = {
+    'build.zig',
+    'build.zig.zon',
+    '.git',
+  },
+
+  capabilities = capabilities,
 })
+
+vim.lsp.enable 'zls'
 
 -- ============================================================================
 -- PHP
 -- ============================================================================
 
-start_on_filetype('php', {
-  name = 'phpactor',
-
+vim.lsp.config('phpactor', {
   cmd = { 'phpactor', 'language-server' },
 
-  root_markers = { 'composer.json', '.git' },
+  filetypes = { 'php' },
+
+  root_markers = {
+    'composer.json',
+    '.git',
+  },
+
+  capabilities = capabilities,
 })
+
+vim.lsp.enable 'phpactor'
 
 -- ============================================================================
 -- CMake
 -- ============================================================================
 
-start_on_filetype('cmake', {
-  name = 'neocmakelsp',
-
+vim.lsp.config('neocmakelsp', {
   cmd = { 'neocmakelsp', 'stdio' },
 
-  root_markers = { 'CMakeLists.txt', '.git' },
+  filetypes = { 'cmake' },
+
+  root_markers = {
+    'CMakeLists.txt',
+    '.git',
+  },
+
+  capabilities = capabilities,
 })
+
+vim.lsp.enable 'neocmakelsp'
 
 -- ============================================================================
 -- GraphQL
 -- ============================================================================
 
-start_on_filetype({ 'graphql', 'gql' }, {
-  name = 'graphql',
+vim.lsp.config('graphql', {
+  cmd = {
+    'graphql-lsp',
+    'server',
+    '-m',
+    'stream',
+  },
 
-  cmd = { 'graphql-lsp', 'server', '-m', 'stream' },
+  filetypes = {
+    'graphql',
+    'gql',
+  },
 
-  root_markers = { 'package.json', '.graphqlrc', '.graphqlrc.yml', '.graphqlrc.yaml', '.graphqlrc.json', '.git' },
+  root_markers = {
+    'package.json',
+    '.graphqlrc',
+    '.graphqlrc.yml',
+    '.graphqlrc.yaml',
+    '.graphqlrc.json',
+    '.git',
+  },
+
+  capabilities = capabilities,
 })
+
+vim.lsp.enable 'graphql'
 
 -- ============================================================================
 -- LSP Attach
@@ -419,9 +667,9 @@ vim.api.nvim_create_autocmd('LspAttach', {
       })
     end
 
-    -- ====================================================================
+    -- ========================================================================
     -- Navigation → Telescope
-    -- ====================================================================
+    -- ========================================================================
 
     lsp_map('n', 'gd', function()
       require('telescope.builtin').lsp_definitions {
@@ -449,23 +697,23 @@ vim.api.nvim_create_autocmd('LspAttach', {
       }
     end, 'Go to type definition')
 
-    -- ====================================================================
+    -- ========================================================================
     -- Documentation
-    -- ====================================================================
+    -- ========================================================================
 
     lsp_map('n', 'K', vim.lsp.buf.hover, 'Hover documentation')
 
-    -- ====================================================================
+    -- ========================================================================
     -- Refactoring
-    -- ====================================================================
+    -- ========================================================================
 
     lsp_map('n', '<leader>rn', vim.lsp.buf.rename, 'Rename symbol')
 
     lsp_map('n', '<leader>ca', vim.lsp.buf.code_action, 'Code action')
 
-    -- ====================================================================
+    -- ========================================================================
     -- Formatting
-    -- ====================================================================
+    -- ========================================================================
 
     lsp_map('n', '<leader>lf', function()
       require('conform').format {
@@ -474,9 +722,9 @@ vim.api.nvim_create_autocmd('LspAttach', {
       }
     end, 'Format buffer')
 
-    -- ====================================================================
+    -- ========================================================================
     -- Symbols → Trouble
-    -- ====================================================================
+    -- ========================================================================
 
     lsp_map('n', '<leader>cs', function()
       require('trouble').toggle {
@@ -492,15 +740,15 @@ vim.api.nvim_create_autocmd('LspAttach', {
       }
     end, 'LSP')
 
-    -- ====================================================================
+    -- ========================================================================
     -- Code outline → Aerial
-    -- ====================================================================
+    -- ========================================================================
 
     lsp_map('n', '<leader>co', '<cmd>AerialToggle!<CR>', 'Code outline')
 
-    -- ====================================================================
+    -- ========================================================================
     -- Inlay hints
-    -- ====================================================================
+    -- ========================================================================
 
     if vim.lsp.inlay_hint then
       lsp_map('n', '<leader>lh', function()

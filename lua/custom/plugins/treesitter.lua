@@ -10,25 +10,17 @@ return {{
                            "markdown", "markdown_inline", "python", "query", "rust", "sql", "tsx", "typescript", "toml",
                            "vim", "vimdoc", "yaml"}
 
-        local installed = {}
-
         for _, language in ipairs(languages) do
-            local ok = pcall(vim.treesitter.language.add, language)
-
-            if ok then
-                table.insert(installed, language)
-            end
+            pcall(vim.treesitter.language.add, language)
         end
 
         local filetypes = {}
 
-        for _, language in ipairs(installed) do
+        for _, language in ipairs(languages) do
             local ok, types = pcall(vim.treesitter.language.get_filetypes, language)
 
             if ok then
-                for _, ft in ipairs(types) do
-                    table.insert(filetypes, ft)
-                end
+                vim.list_extend(filetypes, types)
             end
         end
 
@@ -38,8 +30,9 @@ return {{
             callback = function()
                 pcall(vim.treesitter.start)
 
-                vim.wo.foldexpr = "v:lua.vim.treesitter.foldexpr()"
+                vim.bo.indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
 
+                vim.wo.foldexpr = "v:lua.vim.treesitter.foldexpr()"
                 vim.wo.foldmethod = "expr"
             end
         })
